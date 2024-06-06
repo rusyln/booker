@@ -15,7 +15,7 @@ function booker_form_alter(&$form, FormStateInterface $form_state, $form_id) {
  * Custom validation handler for the booking form.
  */
 function booker_form_validate(&$form, FormStateInterface $form_state) {
-    dmp($form_state);
+    dpm($form_state);
 
     // Example validation: Ensure the "email" field is not empty.
     if (empty($form_state->getValue('email'))) {
