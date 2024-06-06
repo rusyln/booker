@@ -33,6 +33,9 @@ function booker_form_validate(&$form, FormStateInterface $form_state) {
             ->condition('field_rooms', $roomValue)
             ->accessCheck(FALSE);
 
+         // Dump the query.
+         drupal_set_message((string) $query);    
+
         $nids = $query->execute();
 
         // If a matching booking is found, set an error on the form.
