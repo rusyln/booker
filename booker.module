@@ -15,10 +15,11 @@ function booker_form_alter(&$form, FormStateInterface $form_state, $form_id) {
  * Custom validation handler for the booking form.
  */
 function booker_form_validate(&$form, FormStateInterface $form_state) {
-    dpm($form_state);
+    // Get the value of the date time field.
+    $dateTimeValue = $form_state->getValue('field_field_start_datetime');
 
-    // Example validation: Ensure the "email" field is not empty.
-    if (empty($form_state->getValue('field_field_start_datetime'))) {
-      $form_state->setErrorByName('email', t('The email field is required.'));
+    // Check if the date is set.
+    if (empty($dateTimeValue['value'])) {
+      $form_state->setErrorByName('field_field_start_datetime', t('The date time field is required.'));
     }
 }
