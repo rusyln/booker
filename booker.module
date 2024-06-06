@@ -25,7 +25,8 @@ function booker_form_validate(&$form, FormStateInterface $form_state) {
     $query = \Drupal::entityQuery('node')
         ->condition('type', 'booking')
         ->condition('field_field_start_datetime.value', $dateTimeValue['value'])
-        ->condition('field_rooms', $roomValue);
+        ->condition('field_rooms', $roomValue)
+        ->accessCheck(FALSE);
 
     $nids = $query->execute();
 
