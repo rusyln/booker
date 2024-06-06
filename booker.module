@@ -8,7 +8,7 @@
   function booker_form_alter(&$form, &$form_state, $form_id) {
     if ($form_id == 'node_booking_form') {
       $form['#validate'][] = 'booker_form_validate';
-      dpm($form['#validate']);
+      dpm($form);
     }
   } 
 
