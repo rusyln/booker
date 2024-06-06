@@ -21,21 +21,16 @@ function booker_form_validate(&$form, FormStateInterface $form_state) {
     $dateTimeValue = $form_state->getValue('field_field_start_datetime');
     $roomValue = $form_state->getValue('field_rooms');
 
-    // Check if the date time and room fields are set.
-    if (empty($dateTimeValue['value']) || empty($roomValue)) {
-      $form_state->setErrorByName('field_field_start_datetime', t('The date time and room fields are required.'));
-    } else {
-      // Query the database for existing bookings that match the selected time and room.
-      $query = \Drupal::entityQuery('node')
+    // Query the database for existing bookings that match the selected time and room.
+    $query = \Drupal::entityQuery('node')
         ->condition('type', 'booking')
         ->condition('field_field_start_datetime.value', $dateTimeValue['value'])
         ->condition('field_rooms', $roomValue);
 
-      $nids = $query->execute();
+    $nids = $query->execute();
 
-      // If a matching booking is found, set an error on the form.
-      if (!empty($nids)) {
+    // If a matching booking is found, set an error on the form.
+    if (!empty($nids)) {
         $form_state->setErrorByName('field_field_start_datetime', t('This time and room are already booked.'));
-      }
     }
 }
