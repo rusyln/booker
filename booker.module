@@ -15,6 +15,7 @@ function booker_form_alter(&$form, FormStateInterface $form_state, $form_id) {
  * Custom validation handler for the booking form.
  */
 function booker_form_validate(&$form, FormStateInterface $form_state) {
+    dpm( $form_state);
     // Retrieve the values of the date/time and room fields from the form state.
     $dateTimeValues = $form_state->getValue('field_field_start_datetime');
     $roomValue = $form_state->getValue('field_rooms');
