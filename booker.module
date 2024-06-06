@@ -21,23 +21,20 @@ function booker_form_validate(&$form, FormStateInterface $form_state) {
     $dateTimeValue = $form_state->getValue('field_field_start_datetime');
     $roomValue = $form_state->getValue('field_rooms');
 
-    // Check if the date time field is an array and has a 'value' key.
-    if (is_array($dateTimeValue) && isset($dateTimeValue['value'])) {
-        // Extract the date part of the date time field.
-        $dateValue = substr($dateTimeValue['value'], 0, 10);
+    // Extract the date part of the date time field.
+    $dateValue = substr($dateTimeValue['value'], 0, 10);
 
-        // Query the database for existing bookings that match the selected date and room.
-        $query = \Drupal::entityQuery('node')
-            ->condition('type', 'booking')
-            ->condition('field_field_start_datetime.value', $dateValue, 'STARTS_WITH')
-            ->condition('field_rooms', $roomValue)
-            ->accessCheck(FALSE);
+    // Query the database for existing bookings that match the selected date and room.
+    $query = \Drupal::entityQuery('node')
+        ->condition('type', 'booking')
+        ->condition('field_field_start_datetime.value', $dateValue, 'STARTS_WITH')
+        ->condition('field_rooms', $roomValue)
+        ->accessCheck(FALSE);
 
-        $nids = $query->execute();
+    $nids = $query->execute();
 
-        // If a matching booking is found, set an error on the form.
-        if (!empty($nids)) {
-            $form_state->setErrorByName('field_field_start_datetime', t('This date and room are already booked.'));
-        }
+    // If a matching booking is found, set an error on the form.
+    if (!empty($nids)) {
+        $form_state->setErrorByName('field_field_start_datetime', t('This date and room are already booked.'));
     }
 }
