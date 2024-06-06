@@ -2,45 +2,59 @@
 use Drupal\Core\Form\FormStateInterface;
 
 use Drupal\node\Entity\Node;
+
+
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\Node;
+
 /**
  * Implements hook_form_alter().
  */
 function booker_form_alter(&$form, FormStateInterface $form_state, $form_id) {
     if ($form_id == 'node_booking_form') {
-      // Add the custom validation handler.
-      $form['#validate'][] = 'booker_form_validate';
+        // Add the custom validation handler.
+        $form['#validate'][] = 'booker_form_validate';
     }
-  }
+}
 
-  
 /**
  * Custom validation handler for the booking form.
  */
 function booker_form_validate(&$form, FormStateInterface $form_state) {
-    // Get the value of the date time and room fields.
-    $dateTimeValue = $form_state->getValue('field_field_start_datetime');
+    // Retrieve the values of the date/time and room fields from the form state.
+    $dateTimeValues = $form_state->getValue('field_start_datetime');
     $roomValue = $form_state->getValue('field_rooms');
 
-    // Check if the date time field is an array and has a 'value' key.
-    if (is_array($dateTimeValue) && isset($dateTimeValue['value'])) {
-        // Extract the date part of the date time field.
-        $dateValue = substr($dateTimeValue['value'], 0, 10);
+    // Log the values for debugging purposes.
+    \Drupal::logger('booker')->debug('Date value: @date', ['@date' => print_r($dateTimeValues, TRUE)]);
+    \Drupal::logger('booker')->debug('Room value: @room', ['@room' => $roomValue]);
 
-        // Query the database for existing bookings that match the selected date and room.
+    // Check if the date/time field is an array and has at least one value.
+    if (is_array($dateTimeValues) && !empty($dateTimeValues[0]['value'])) {
+        // Extract the date part of the first date/time field value.
+        $dateValue = substr($dateTimeValues[0]['value'], 0, 10);
+
+        // Build the query to check for existing bookings with the same date and room.
         $query = \Drupal::entityQuery('node')
             ->condition('type', 'booking')
-            ->condition('field_field_start_datetime.value', $dateValue . '%', 'LIKE')
+            ->condition('field_start_datetime.value', $dateValue . '%', 'LIKE')
             ->condition('field_rooms', $roomValue)
             ->accessCheck(FALSE);
 
-       
-            \Drupal::logger('booker')->notice((string) $query);
-
+        // Execute the query to get node IDs of matching bookings.
         $nids = $query->execute();
 
-        // If a matching booking is found, set an error on the form.
+        // Log the result of the query for debugging purposes.
+        \Drupal::logger('booker')->debug('Matching booking node IDs: @nids', ['@nids' => print_r($nids, TRUE)]);
+
+        // If any matching booking nodes are found, set an error on the form.
         if (!empty($nids)) {
-            $form_state->setErrorByName('field_field_start_datetime', t('This date and room are already booked.'));
+            $form_state->setErrorByName('field_start_datetime', t('This date and room are already booked.'));
         }
+    }
+    else {
+        // If date/time value is not properly set, set an error on the form.
+        $form_state->setErrorByName('field_start_datetime', t('Please provide a valid date and time.'));
     }
 }
