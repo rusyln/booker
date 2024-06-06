@@ -3,20 +3,19 @@
 /**
  * Implements hook_form_alter().
  */
-function booker_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+
+
+  function booker_form_alter(&$form, &$form_state, $form_id) {
     if ($form_id == 'node_booking_form') {
-      // Add custom validation handler.
       $form['#validate'][] = 'booker_form_validate';
+      dpm($form['#validate']);
     }
-  }
+  } 
+
   
-  /**
-   * Custom validation handler.
-   */
-  function booker_form_validate(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
-    // Custom validation logic.
-    if (empty($form_state->getValue('title'))) {
-      $form_state->setErrorByName('title', t('The title field is required. 1'));
+  function booker_form_validate($form, &$form_state) {
+    if ($form_state['values']['title'] == 'the quick fox jumped over the lazy dog') {
+      form_set_error('title', t('You have added an invalid title.'));
     }
   }
   
