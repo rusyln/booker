@@ -14,8 +14,8 @@
 
   
   function booker_form_validate($form, &$form_state) {
-    if ($form_state['values']['title'] == 'the quick fox jumped over the lazy dog') {
-      form_set_error('title', t('You have added an invalid title.'));
+    if ($form_state->getValue('title') == 'the quick fox jumped over the lazy dog') {
+      $form_state->setErrorByName('title', t('You have added an invalid title.'));
     }
   }
   
