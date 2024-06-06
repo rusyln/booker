@@ -1,6 +1,5 @@
 <?php
 use Drupal\Core\Form\FormStateInterface;
-
 use Drupal\node\Entity\Node;
 
 /**
@@ -23,12 +22,15 @@ function booker_form_validate(&$form, FormStateInterface $form_state) {
 
     // Log the values for debugging purposes.
     \Drupal::logger('booker')->debug('Date value: @date', ['@date' => print_r($dateTimeValues, TRUE)]);
-    \Drupal::logger('booker')->debug('Room value: @room', ['@room' => $roomValue]);
+    \Drupal::logger('booker')->debug('Room value: @room', ['@room' => print_r($roomValue, TRUE)]);
 
     // Check if the date/time field is an array and has at least one value.
     if (is_array($dateTimeValues) && !empty($dateTimeValues[0]['value'])) {
         // Extract the date part of the first date/time field value.
         $dateValue = substr($dateTimeValues[0]['value'], 0, 10);
+
+        // Log the extracted date value.
+        \Drupal::logger('booker')->debug('Extracted date value: @date', ['@date' => $dateValue]);
 
         // Build the query to check for existing bookings with the same date and room.
         $query = \Drupal::entityQuery('node')
