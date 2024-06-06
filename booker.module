@@ -1,6 +1,22 @@
 <?php
 
 /**
- * @file
- * Primary module hooks for booker module.
+ * Implements hook_form_alter().
  */
+function booker_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+    if ($form_id == 'node_booking_form') {
+      // Add custom validation handler.
+      $form['#validate'][] = 'booker_form_validate';
+    }
+  }
+  
+  /**
+   * Custom validation handler.
+   */
+  function booker_form_validate(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
+    // Custom validation logic.
+    if (empty($form_state->getValue('title'))) {
+      $form_state->setErrorByName('title', t('The title field is required.'));
+    }
+  }
+  
