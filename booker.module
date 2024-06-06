@@ -34,7 +34,7 @@ function booker_form_validate(&$form, FormStateInterface $form_state) {
             ->accessCheck(FALSE);
 
          // Dump the query.
-         drupal_set_message((string) $query);    
+        dpm( $query);
 
         $nids = $query->execute();
 
