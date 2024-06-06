@@ -18,7 +18,7 @@ function booker_form_validate(&$form, FormStateInterface $form_state) {
     dpm($form_state);
 
     // Example validation: Ensure the "email" field is not empty.
-    if (empty($form_state->getValue('email'))) {
+    if (empty($form_state->getValue('field_field_start_datetime'))) {
       $form_state->setErrorByName('email', t('The email field is required.'));
     }
 }
