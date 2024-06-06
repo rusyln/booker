@@ -3,14 +3,19 @@
 /**
  * Implements hook_form_alter().
  */
-function booker_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  if ($form_id == 'node_booking_form') {
-    $form['#validate'][] = 'booker_form_validate';
-  }
-} 
 
-function booker_form_validate($form, \Drupal\Core\Form\FormStateInterface $form_state) {
-  if ($form_state->getValue('title') == 'the quick fox jumped over the lazy dog') {
-    $form_state->setErrorByName('title', t('You have added an invalid title.'));
+
+  function booker_form_alter(&$form, &$form_state, $form_id) {
+    if ($form_id == 'node_booking_form') {
+      $form['#validate'][] = 'booker_form_validate';
+      dpm($form['#validate']);
+    }
+  } 
+
+  
+  function booker_form_validate($form, &$form_state) {
+    if ($form_state->getValue('title') == 'the quick fox jumped over the lazy dog') {
+      $form_state->setErrorByName('title', t('You have added an invalid title.'));
+    }
   }
-}
+  
