@@ -1,0 +1,7 @@
+name: booker
+type: module
+description: This will be the validation for Booking
+package: Booking
+core_version_requirement: ^9 || ^10
+dependencies:
+  - node
