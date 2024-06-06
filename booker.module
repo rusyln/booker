@@ -16,7 +16,7 @@ function booker_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_st
   function booker_form_validate(&$form, \Drupal\Core\Form\FormStateInterface $form_state) {
     // Custom validation logic.
     if (empty($form_state->getValue('title'))) {
-      $form_state->setErrorByName('title', t('The title field is required.'));
+      $form_state->setErrorByName('title', t('The title field is required. 1'));
     }
   }
   
