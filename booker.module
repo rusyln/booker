@@ -33,8 +33,8 @@ function booker_form_validate(&$form, FormStateInterface $form_state) {
             ->condition('field_rooms', $roomValue)
             ->accessCheck(FALSE);
 
-         // Dump the query.
-        dpm( $query);
+       
+            \Drupal::logger('booker')->notice((string) $query);
 
         $nids = $query->execute();
 
