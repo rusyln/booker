@@ -1,16 +1,18 @@
 <?php
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
-
+use Drupal\Core\Entity\EntityInterface;
 /**
  * Implements hook_form_alter().
  */
 function booker_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-    if ($form_id == 'node_booking_form') {
+    if ($form_id == 'node_booking_form' || $form_id == 'node_booking_edit_form') {
         // Add the custom validation handler.
         $form['#validate'][] = 'booker_form_validate';
+
+        // Add the custom submit handler.
+        $form['#submit'][] = 'booker_form_submit';
     }
-}
 /**
  * Custom validation handler for the booking form.
  */
@@ -52,5 +54,29 @@ function booker_form_validate(&$form, FormStateInterface $form_state) {
     } else {
         // If date/time value is not properly set, set an error on the form.
         $form_state->setErrorByName('field_field_start_datetime', t('Please provide a valid date and time.'));
+    }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for node entities.
+ */
+function booker_node_presave(EntityInterface $entity) {
+    if ($entity->bundle() == 'booking' && $entity->hasField('field_booking_status') && $entity->field_booking_status->value != $entity->original->field_booking_status->value) {
+        // The booking status has changed.
+
+        // Prepare the email body.
+        $email_body = 'Booking status: ' . $entity->field_booking_status->value;
+
+        // Get the author of the node.
+        $author = $entity->getOwner();
+
+        // Get the author's email.
+        $author_email = $author->getEmail();
+
+        // Send the email.
+        $mailManager = \Drupal::service('plugin.manager.mail');
+        $params['message'] = $email_body;
+        $params['subject'] = 'Booking status changed';
+        $mailManager->mail('booker', 'booking_status_changed', $author_email, \Drupal::languageManager()->getDefaultLanguage(), $params);
     }
 }
