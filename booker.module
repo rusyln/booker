@@ -2,7 +2,8 @@
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
 use Drupal\Core\Entity\EntityInterface;
-
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\MailerInterface;
 /**
  * Implements hook_form_alter().
  */
@@ -73,10 +74,15 @@ function booker_node_presave(EntityInterface $entity) {
         // Get the author's email.
         $author_email = $author->getEmail();
 
+        // Create the email.
+        $email = (new Email())
+            ->from('you@example.com') // Replace with your email
+            ->to($author_email)
+            ->subject('Booking status changed')
+            ->text($email_body);
+
         // Send the email.
-        $mailManager = \Drupal::service('plugin.manager.mail');
-        $params['message'] = $email_body;
-        $params['subject'] = 'Booking status changed';
-        $mailManager->mail('booker', 'booking_status_changed', $author_email, \Drupal::languageManager()->getDefaultLanguage(), $params);
+        $mailer = \Drupal::service('mailer');
+        $mailer->send($email);
     }
 }
