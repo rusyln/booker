@@ -81,7 +81,7 @@ function booker_node_presave(EntityInterface $entity) {
             ->text($email_body);
 
         // Send the email.
-        $mailer = \Drupal::service('mailer.default');
+        $mailer = \Drupal::service('symfony_mailer.mailer.default');
         $mailer->send($email);
     }
 }
