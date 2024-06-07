@@ -1,18 +1,16 @@
 <?php
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
-use Drupal\Core\Entity\EntityInterface;
+
 /**
  * Implements hook_form_alter().
  */
 function booker_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-    if ($form_id == 'node_booking_form' || $form_id == 'node_booking_edit_form') {
+    if ($form_id == 'node_booking_form') {
         // Add the custom validation handler.
         $form['#validate'][] = 'booker_form_validate';
-
-        // Add the custom submit handler.
-        $form['#submit'][] = 'booker_form_submit';
     }
+}
 /**
  * Custom validation handler for the booking form.
  */
@@ -79,5 +77,4 @@ function booker_node_presave(EntityInterface $entity) {
         $params['subject'] = 'Booking status changed';
         $mailManager->mail('booker', 'booking_status_changed', $author_email, \Drupal::languageManager()->getDefaultLanguage(), $params);
     }
-}
 }
