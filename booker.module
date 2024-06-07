@@ -80,3 +80,4 @@ function booker_node_presave(EntityInterface $entity) {
         $mailManager->mail('booker', 'booking_status_changed', $author_email, \Drupal::languageManager()->getDefaultLanguage(), $params);
     }
 }
+}
