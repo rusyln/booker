@@ -3,7 +3,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
 use Drupal\Core\Entity\EntityInterface;
 use Symfony\Component\Mime\Email;
-use Symfony\Component\Mailer\MailerInterface;
+use Drupal\Core\Mail\MailManagerInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Implements hook_form_alter().
  */
@@ -56,6 +58,9 @@ function booker_form_validate(&$form, FormStateInterface $form_state) {
         $form_state->setErrorByName('field_field_start_datetime', t('Please provide a valid date and time.'));
     }
 }
+
+
+
 /**
  * Implements hook_ENTITY_TYPE_presave() for node entities.
  */
@@ -72,15 +77,32 @@ function booker_node_presave(EntityInterface $entity) {
         // Get the author's email.
         $author_email = $author->getEmail();
 
-        // Create the email.
-        $email = (new Email())
-            ->from('you@example.com') // Replace with your email
-            ->to($author_email)
-            ->subject('Booking status changed')
-            ->text($email_body);
+        // Prepare the email params.
+        $module = 'booker';
+        $key = 'booking_status_changed';
+        $to = $author_email;
+        $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
+        $send = true;
+
+        // Prepare the email parameters.
+        $params['subject'] = 'Booking status changed';
+        $params['body'] = $email_body;
+        $params['from'] = 'you@example.com'; // Replace with your email
 
         // Send the email.
-        $mailer = \Drupal::service('mailer.transport');
-        $mailer->send($email);
+        \Drupal::service('plugin.manager.mail')->mail($module, $key, $to, $langcode, $params, NULL, $send);
+    }
+}
+
+/**
+ * Implements hook_mail().
+ */
+function booker_mail($key, &$message, $params) {
+    switch ($key) {
+        case 'booking_status_changed':
+            $message['subject'] = $params['subject'];
+            $message['body'][] = $params['body'];
+            $message['from'] = $params['from'];
+            break;
     }
 }
