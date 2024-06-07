@@ -56,7 +56,6 @@ function booker_form_validate(&$form, FormStateInterface $form_state) {
         $form_state->setErrorByName('field_field_start_datetime', t('Please provide a valid date and time.'));
     }
 }
-
 /**
  * Implements hook_ENTITY_TYPE_presave() for node entities.
  */
@@ -81,7 +80,7 @@ function booker_node_presave(EntityInterface $entity) {
             ->text($email_body);
 
         // Send the email.
-        $mailer = \Drupal::service('symfony_mailer.mailer.default');
+        $mailer = \Drupal::service('mailer.transport');
         $mailer->send($email);
     }
 }
