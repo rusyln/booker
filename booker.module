@@ -76,16 +76,16 @@ function booker_node_presave(EntityInterface $entity) {
       #  $email_body = 'Booking Title: ' . $booking_title . ', Booking Status: ' . $entity->field_booking_status->value;
 
         $email_body = '
-        <p><strong>Details of your booking:</strong></p>
-        <ul>
-             <li><strong>Event :</strong> ' . $booking_title . '</li>
-             <li><strong>Booking Status :</strong> '.$entity->field_booking_status->value .'</li>
-            <li><strong>Date:</strong> [Booking Date]</li>
-            <li><strong>Time:</strong> [Booking Time]</li>
-            <li><strong>Room:</strong> [Conference Room Name]</li>
-        </ul>
-        <p>If you have any questions or need to make changes to your booking, please contact us at [Contact Information].</p>
-        <p>Best regards,</p>
+        Details of your booking:
+        
+            Event : ' . $booking_title . '
+            Booking Status : '.$entity->field_booking_status->value .'
+            Date: [Booking Date]
+            Time: [Booking Time
+            Room: [Conference Room Name]
+        
+        If you have any questions or need to make changes to your booking, please contact us at [Contact Information].
+        Best regards,
         ';
 
 
