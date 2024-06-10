@@ -68,8 +68,12 @@ function booker_node_presave(EntityInterface $entity) {
     if ($entity->bundle() == 'booking' && $entity->hasField('field_booking_status') && $entity->field_booking_status->value != $entity->original->field_booking_status->value) {
         // The booking status has changed.
 
+      
+        // Get the booking title.
+        $booking_title = $entity->getTitle();
+
         // Prepare the email body.
-        $email_body = 'Booking status: ' . $entity->field_booking_status->value;
+        $email_body = 'Booking Title: ' . $booking_title . ', Booking Status: ' . $entity->field_booking_status->value;
 
         // Get the author of the node.
         $author = $entity->getOwner();
@@ -87,7 +91,7 @@ function booker_node_presave(EntityInterface $entity) {
         // Prepare the email parameters.
         $params['subject'] = 'Booking status changed';
         $params['body'] = $email_body;
-        $params['from'] = 'you@example.com'; // Replace with your email
+        $params['from'] = 'noreply@psa.gov.ph'; // Replace with your email
 
         // Send the email.
         \Drupal::service('plugin.manager.mail')->mail($module, $key, $to, $langcode, $params, NULL, $send);
