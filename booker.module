@@ -72,10 +72,15 @@ function booker_node_presave(EntityInterface $entity) {
         // Get the booking title.
         $booking_title = $entity->getTitle();
           // Get the room, start datetime, and end datetime.
-          $room = $entity->get('field_rooms')->entity->label();
+          $room = strtoupper($entity->get('field_rooms')->entity->label());
           $start_datetime = $entity->get('field_field_start_datetime')->value;
           $end_datetime = $entity->get('field_end_datetime')->value;
+// Convert the start datetime to a more readable format.
+$start_datetime_object = new \DateTime($start_datetime);
+$start_datetime_formatted = $start_datetime_object->format('F d, Y H:i');
 
+$end_datetime_object = new \DateTime($end_datetime);
+$end_datetime_formatted = $end_datetime_object->format('F d, Y H:i');
         // Prepare the email body.
       #  $email_body = 'Booking Title: ' . $booking_title . ', Booking Status: ' . $entity->field_booking_status->value;
 
@@ -84,7 +89,7 @@ function booker_node_presave(EntityInterface $entity) {
         
             Event : ' . $booking_title . '
             Booking Status : '.$entity->field_booking_status->value .'
-            Date / Time: '.$start_datetime. ' to '.$end_datetime.'
+            Date / Time: '.$start_datetime_formatted. ' to '.$end_datetime_formatted.'
             Room: '. $room.'
         
         If you have any questions or need to make changes to your booking, please contact us at [Contact Information].
