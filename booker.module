@@ -72,7 +72,8 @@ function booker_node_presave(EntityInterface $entity) {
         // Get the booking title.
         $booking_title = $entity->getTitle();
           // Get the room, start datetime, and end datetime.
-          $room = strtoupper($entity->get('field_rooms')->entity->label());
+          $room = $entity->get('field_rooms')->entity->label();
+            $room = strtoupper((string)$room);
           $start_datetime = $entity->get('field_field_start_datetime')->value;
           $end_datetime = $entity->get('field_end_datetime')->value;
 // Convert the start datetime to a more readable format.
