@@ -73,7 +73,7 @@ function booker_node_presave(EntityInterface $entity) {
         $booking_title = $entity->getTitle();
           // Get the room, start datetime, and end datetime.
           $room = $entity->get('field_rooms')->entity->label();
-          $start_datetime = $entity->get('field_start_datetime')->value;
+          $start_datetime = $entity->get('field_field_start_datetime')->value;
           $end_datetime = $entity->get('field_end_datetime')->value;
 
         // Prepare the email body.
