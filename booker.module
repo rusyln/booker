@@ -71,6 +71,10 @@ function booker_node_presave(EntityInterface $entity) {
       
         // Get the booking title.
         $booking_title = $entity->getTitle();
+          // Get the room, start datetime, and end datetime.
+          $room = $entity->get('field_rooms')->entity->label();
+          $start_datetime = $entity->get('field_start_datetime')->value;
+          $end_datetime = $entity->get('field_end_datetime')->value;
 
         // Prepare the email body.
       #  $email_body = 'Booking Title: ' . $booking_title . ', Booking Status: ' . $entity->field_booking_status->value;
@@ -80,9 +84,8 @@ function booker_node_presave(EntityInterface $entity) {
         
             Event : ' . $booking_title . '
             Booking Status : '.$entity->field_booking_status->value .'
-            Date: [Booking Date]
-            Time: [Booking Time
-            Room: [Conference Room Name]
+            Date / Time: '.$start_datetime. ' to '.$end_datetime.'
+            Room: '. $room.'
         
         If you have any questions or need to make changes to your booking, please contact us at [Contact Information].
         Best regards,
@@ -103,7 +106,7 @@ function booker_node_presave(EntityInterface $entity) {
         $send = true;
 
         // Prepare the email parameters.
-        $params['subject'] = 'Booking status changed';
+        $params['subject'] = 'Booking Status';
         $params['body'] = $email_body;
         $params['from'] = 'noreply@psa.gov.ph'; // Replace with your email
 
