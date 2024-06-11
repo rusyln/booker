@@ -9,17 +9,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Implements hook_form_alter().
  */
-function booker_form_alter(&$form, FormStateInterface $form_state, $form_id,$context,$element) {
+function booker_form_alter(&$form, FormStateInterface $form_state, $form_id) {
     if ($form_id == 'node_booking_form') {
         
         // Add the custom validation handler.
         $form['#validate'][] = 'booker_form_validate';
-
-        if ($context['field']->getName() == 'field_rooms') {
-            $element['#type'] = 'booker_rooms_card';
-          }
     }
-   
+    
 }
 /**
  * Custom validation handler for the booking form.
