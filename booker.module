@@ -41,7 +41,7 @@ function booker_theme($existing, $type, $theme, $path) {
     return [
       'room_card' => [
         'variables' => NULL,
-        'template' => 'room-card.html',
+        'template' => 'room-card',
         'path' => $module_path . '/templates',
         
       ],
