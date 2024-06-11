@@ -33,19 +33,20 @@ function booker_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 }
 
 
-/**
- * Implements hook_theme().
- */
+
 function booker_theme($existing, $type, $theme, $path) {
+    $extension_path_resolver = \Drupal::service('extension.path.resolver');
+    $module_path = $extension_path_resolver->getPath('module', 'booker');
+  
     return [
-        'room_card' => [
-            'variables' => [
-                'room' => NULL, // The room entity.
-            ],
-            'templates' => 'room-card', // Create a corresponding template file.
-        ],
+      'room_card' => [
+        'variables' => NULL,
+        'template' => 'room-card.html',
+        'path' => $module_path . '/templates',
+        
+      ],
     ];
-}
+  }
 
 
 /**
