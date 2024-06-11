@@ -38,12 +38,14 @@ function booker_form_alter(&$form, FormStateInterface $form_state, $form_id) {
  */
 function get_rooms_options() {
     $options = [];
-    $rooms = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'booking']); // Adjust 'room' to your actual room content type.
+    $bookings = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'booking']);
 
-    // Check if $rooms is an array or object before looping
-    if (is_array($rooms) || is_object($rooms)) {
-        foreach ($rooms as $room) {
-            $options[$room->id()] = $room->label();
+    if (is_array($bookings) || is_object($bookings)) {
+        foreach ($bookings as $booking) {
+            $room = $booking->get('field_rooms')->entity;
+            if ($room) {
+                $options[$room->id()] = $room->label();
+            }
         }
     }
 
