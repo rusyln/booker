@@ -9,13 +9,54 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Implements hook_form_alter().
  */
+/**
+ * Implements hook_form_alter().
+ */
 function booker_form_alter(&$form, FormStateInterface $form_state, $form_id) {
     if ($form_id == 'node_booking_form') {
-        
+        // Remove the existing field_rooms entity reference field.
+        unset($form['field_rooms']);
+
+        // Add the custom rooms field.
+        $form['field_rooms_custom'] = [
+            '#type' => 'checkboxes', // Use checkboxes if multiple rooms can be selected.
+            '#title' => t('Rooms'),
+            '#options' => get_rooms_options(), // Implement a function to get room options.
+            '#required' => TRUE, // Adjust as needed.
+            '#default_value' => isset($form_state->getValue('field_rooms')) ? $form_state->getValue('field_rooms') : NULL,
+            '#description' => t('Select the rooms for booking.'),
+        ];
+
         // Add the custom validation handler.
         $form['#validate'][] = 'booker_form_validate';
     }
-    
+}/**
+ * Custom function to get room options.
+ */
+function get_rooms_options() {
+    // Implement your logic here to retrieve room options, e.g., from a taxonomy vocabulary or elsewhere.
+    // Return an associative array where keys are room IDs and values are room labels.
+    // Example:
+    $options = [];
+    $rooms = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'room']); // Adjust 'room' to your actual room content type.
+    foreach ($rooms as $room) {
+        $options[$room->id()] = $room->label();
+    }
+    return $options;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function booker_theme($existing, $type, $theme, $path) {
+    return [
+        'room_card' => [
+            'variables' => [
+                'room' => NULL, // The room entity.
+            ],
+            'template' => 'room-card', // Create a corresponding template file.
+        ],
+    ];
 }
 /**
  * Custom validation handler for the booking form.

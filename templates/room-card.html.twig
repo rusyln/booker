@@ -1,0 +1,5 @@
+<div class="room-card">
+    <input type="checkbox" id="room-{{ room.id }}" name="field_rooms_custom[]" value="{{ room.id }}"{{ room.checked ? ' checked' : '' }}>
+    <label for="room-{{ room.id }}">{{ room.label }}</label>
+    {# Add additional room details here if needed #}
+</div>
