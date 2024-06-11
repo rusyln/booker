@@ -37,14 +37,16 @@ function booker_form_alter(&$form, FormStateInterface $form_state, $form_id) {
  * Custom function to get room options.
  */
 function get_rooms_options() {
-    // Implement your logic here to retrieve room options, e.g., from a taxonomy vocabulary or elsewhere.
-    // Return an associative array where keys are room IDs and values are room labels.
-    // Example:
     $options = [];
-    $rooms = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'room']); // Adjust 'room' to your actual room content type.
-    foreach ($rooms as $room) {
-        $options[$room->id()] = $room->label();
+    $rooms = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'booking']); // Adjust 'room' to your actual room content type.
+
+    // Check if $rooms is an array or object before looping
+    if (is_array($rooms) || is_object($rooms)) {
+        foreach ($rooms as $room) {
+            $options[$room->id()] = $room->label();
+        }
     }
+
     return $options;
 }
 
