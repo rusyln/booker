@@ -43,6 +43,7 @@ function get_rooms_options() {
     if (is_array($bookings) || is_object($bookings)) {
         foreach ($bookings as $booking) {
             $room = $booking->get('field_rooms')->entity;
+            ksm($room);
             if ($room) {
                 $options[$room->id()] = $room->label();
             }
