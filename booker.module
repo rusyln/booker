@@ -34,27 +34,6 @@ function booker_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 
 
 /**
- * Custom function to get room options.
- */
-function get_rooms_options() {
-    $options = [];
-    $bookings = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'booking']);
-
-    if (is_array($bookings) || is_object($bookings)) {
-        foreach ($bookings as $booking) {
-            $room = $booking->get('field_rooms')->entity;
-          dpm($room);
-            if ($room) {
-                $options[$room->id()] = $room->label();
-            }
-        }
-    }
-
-
-    return $options;
-}
-
-/**
  * Implements hook_theme().
  */
 function booker_theme($existing, $type, $theme, $path) {
@@ -67,6 +46,24 @@ function booker_theme($existing, $type, $theme, $path) {
         ],
     ];
 }
+
+
+/**
+ * Custom function to get room options.
+ */
+
+ function get_rooms_options() {
+    $options = [];
+    $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree('floor_and_rooms');
+
+    if (is_array($terms) || is_object($terms)) {
+        foreach ($terms as $term) {
+            $options[$term->tid] = $term->name;
+        }
+    }
+    return $options;
+}
+
 /**
  * Custom validation handler for the booking form.
  */
