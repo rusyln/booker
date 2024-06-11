@@ -23,7 +23,7 @@ function booker_form_alter(&$form, FormStateInterface $form_state, $form_id) {
             '#title' => t('Rooms'),
             '#options' => get_rooms_options(), // Implement a function to get room options.
             '#required' => TRUE, // Adjust as needed.
-            '#default_value' => isset($form_state->getValue('field_rooms')) ? $form_state->getValue('field_rooms') : NULL,
+            '#default_value' => "",
             '#description' => t('Select the rooms for booking.'),
         ];
 
