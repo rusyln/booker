@@ -42,7 +42,7 @@ function booker_theme($existing, $type, $theme, $path) {
             'variables' => [
                 'room' => NULL, // The room entity.
             ],
-            'template' => 'room-card', // Create a corresponding template file.
+            'templates' => 'room-card', // Create a corresponding template file.
         ],
     ];
 }
