@@ -1,5 +1,11 @@
-<div class="room-card">
-    <input type="checkbox" id="room-{{ room.id }}" name="field_rooms_custom[]" value="{{ room.id }}"{{ room.checked ? ' checked' : '' }}>
-    <label for="room-{{ room.id }}">{{ room.label }}</label>
-    {# Add additional room details here if needed #}
+{# room-card.html.twig #}
+{% set id = 'room-' ~ room.id %}
+<div class="card">
+    <div class="card-body">
+        <div class="form-group">
+            <input type="radio" id="{{ id }}" name="field_rooms_custom[]" value="{{ room.id }}" class="form-check-input"{{ room.checked ? ' checked' : '' }}>
+            <label for="{{ id }}" class="form-check-label">{{ room.label }}</label>
+        </div>
+        {# Add additional room details here if needed #}
+    </div>
 </div>
