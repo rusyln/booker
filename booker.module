@@ -30,7 +30,7 @@ function booker_form_alter(&$form, FormStateInterface $form_state, $form_id) {
         // Add the custom validation handler.
         $form['#validate'][] = 'booker_form_validate';
     }
-}/**
+/**
  * Custom function to get room options.
  */
 function get_rooms_options() {
@@ -44,6 +44,8 @@ function get_rooms_options() {
     }
     return $options;
 }
+
+
 
 /**
  * Implements hook_theme().
