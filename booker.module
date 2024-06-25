@@ -109,71 +109,81 @@ function booker_form_validate(&$form, FormStateInterface $form_state) {
     }
 }
 
-
-
 /**
  * Implements hook_ENTITY_TYPE_presave() for node entities.
  */
 function booker_node_presave(EntityInterface $entity) {
-    if ($entity->bundle() == 'booking' && $entity->hasField('field_booking_status') && $entity->field_booking_status->value != $entity->original->field_booking_status->value) {
-        // The booking status has changed.
+    if ($entity->bundle() == 'booking' && $entity->hasField('field_booking_status')) {
+        // Check if the node is new or being updated.
+        $is_new = $entity->isNew();
 
-      
-        // Get the booking title.
-        $booking_title = $entity->getTitle();
-          // Get the room, start datetime, and end datetime.
-          $room = $entity->get('field_rooms')->entity->label();
+        // Initialize a flag for status change.
+        $status_changed = false;
 
+        // If the node is not new, check if the booking status has changed.
+        if (!$is_new && $entity->original->hasField('field_booking_status')) {
+            $original_status = $entity->original->get('field_booking_status')->value;
+            $current_status = $entity->get('field_booking_status')->value;
+            $status_changed = ($current_status != $original_status);
+        }
+
+        if ($is_new || $status_changed) {
+            // The booking status has changed or it's a new node.
+
+            // Get the booking title.
+            $booking_title = $entity->getTitle();
+
+            // Get the room, start datetime, and end datetime.
+            $room = $entity->get('field_rooms')->entity->label();
             $room = strtoupper((string)$room);
-       
+
             $start_datetime = $entity->get('field_field_start_datetime')->value;
-          $end_datetime = $entity->get('field_end_datetime')->value;
+            $end_datetime = $entity->get('field_end_datetime')->value;
 
+            $status = $entity->get('field_booking_status')->value;
+            $status = strtoupper((string)$status);
 
-          $status = $entity->field_booking_status->value;
-          $status = strtoupper((string)$status);
-// Convert the start datetime to a more readable format.
-$start_datetime_object = new \DateTime($start_datetime);
-$start_datetime_formatted = $start_datetime_object->format('F d, Y H:i');
+            // Convert the start datetime to a more readable format.
+            $start_datetime_object = new \DateTime($start_datetime);
+            $start_datetime_formatted = $start_datetime_object->format('F d, Y H:i');
 
-$end_datetime_object = new \DateTime($end_datetime);
-$end_datetime_formatted = $end_datetime_object->format('F d, Y H:i');
-        // Prepare the email body.
-      #  $email_body = 'Booking Title: ' . $booking_title . ', Booking Status: ' . $entity->field_booking_status->value;
+            $end_datetime_object = new \DateTime($end_datetime);
+            $end_datetime_formatted = $end_datetime_object->format('F d, Y H:i');
 
-        $email_body = '
-        Details of your booking:
-        
-            Event : ' . $booking_title . '
-            Booking Status : '.$status .'
-            Date / Time: '.$start_datetime_formatted. ' to '.$end_datetime_formatted.'
-            Room: '. $room.'
-        
-        If you have any questions or need to make changes to your booking, please contact us at [Contact Information].
-        Best regards,
-        ';
+            // Prepare the email body.
+            $email_body = '
+                Details of your booking:
 
+                Event: ' . $booking_title . '
+                Booking Status: ' . $status . '
+                Date/Time: ' . $start_datetime_formatted . ' to ' . $end_datetime_formatted . '
+                Room: ' . $room . '
 
-        // Get the author of the node.
-        $author = $entity->getOwner();
+                If you have any questions or need to make changes to your booking, please contact us at [Contact Information].
+                Best regards,
+            ';
 
-        // Get the author's email.
-        $author_email = $author->getEmail();
+            // Get the author of the node.
+            $author = $entity->getOwner();
 
-        // Prepare the email params.
-        $module = 'booker';
-        $key = 'booking_status_changed';
-        $to = $author_email;
-        $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
-        $send = true;
+            // Get the author's email.
+            $author_email = $author->getEmail();
 
-        // Prepare the email parameters.
-        $params['subject'] = 'Booking Status';
-        $params['body'] = $email_body;
-        $params['from'] = 'noreply@psa.gov.ph'; // Replace with your email
+            // Prepare the email params.
+            $module = 'booker';
+            $key = 'booking_status_changed';
+            $to = $author_email;
+            $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
+            $send = true;
 
-        // Send the email.
-        \Drupal::service('plugin.manager.mail')->mail($module, $key, $to, $langcode, $params, NULL, $send);
+            // Prepare the email parameters.
+            $params['subject'] = 'Booking Status';
+            $params['body'] = $email_body;
+            $params['from'] = 'noreply@psa.gov.ph'; // Replace with your email
+
+            // Send the email.
+            \Drupal::service('plugin.manager.mail')->mail($module, $key, $to, $langcode, $params, NULL, $send);
+        }
     }
 }
 
