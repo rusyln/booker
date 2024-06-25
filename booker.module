@@ -6,31 +6,6 @@ use Symfony\Component\Mime\Email;
 use Drupal\Core\Mail\MailManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-/**
- * Implements hook_form_alter().
- */
-/**
- * Implements hook_form_alter().
- */
-function booker_form_alter(&$form, FormStateInterface $form_state, $form_id) {
-    if ($form_id == 'node_booking_form') {
-        // Remove the existing field_rooms entity reference field.
-        unset($form['field_rooms']);
-
-        // Add the custom rooms field.
-        $form['field_rooms_custom'] = [
-            '#type' => 'checkboxes', // Use checkboxes if multiple rooms can be selected.
-            '#title' => t('Rooms'),
-            '#options' => get_rooms_options(), // Implement a function to get room options.
-            '#required' => TRUE, // Adjust as needed.
-            '#default_value' => "",
-            '#description' => t('Select the rooms for booking.'),
-        ];
-
-        // Add the custom validation handler.
-        $form['#validate'][] = 'booker_form_validate';
-    }
-}
 
 
 
